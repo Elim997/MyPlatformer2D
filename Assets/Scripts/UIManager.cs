@@ -12,6 +12,15 @@ public class UIManager : MonoBehaviour
 
     public Canvas gameCanvas;
 
+    public static bool isPaused;
+    public GameObject pauseMenu;
+
+
+    private void Start()
+    {
+        pauseMenu.SetActive(false);
+    }
+
     private void Awake()
     {
         gameCanvas = FindObjectOfType<Canvas>();
@@ -50,10 +59,9 @@ public class UIManager : MonoBehaviour
         tmpText.text = healthRestored.ToString();
     }
 
-    public void OnExitGame(InputAction.CallbackContext context)
+    public void ExitGame()
     {
-        if (context.started)
-        {
+        
             #if (UNITY_EDITOR || DEVELOPMENT_BUILD)
                 Debug.Log(this.name + " : " +this.GetType()+ " : "+System.Reflection.MethodBase.GetCurrentMethod().Name);
             #endif
@@ -65,8 +73,31 @@ public class UIManager : MonoBehaviour
                 SceneManager.LoadScene("QuitScene");
             #endif
 
-        }
+        
     }
+
+    
+    public void PauseGame(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            pauseMenu.SetActive(true);
+            Time.timeScale = 0f;
+            isPaused = true;
+        }
+
+    }
+
+    public void ResumeGame()
+    {
+        
+            pauseMenu.SetActive(false);
+            Time.timeScale = 1f;
+            isPaused = false;
+        
+            
+    }
+    
 }
    
 

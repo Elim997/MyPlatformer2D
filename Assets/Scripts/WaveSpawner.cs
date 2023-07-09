@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 
 public class WaveSpawner : MonoBehaviour
@@ -11,11 +13,14 @@ public class WaveSpawner : MonoBehaviour
     public UnityEvent<int> waveMonsterAlive;
     public UnityEvent<int> killCountChanged;
 
+    private DifficultyUI button;
+
     public List<Enemy> enemies = new List<Enemy>();
     public int currWave;
     private int waveValue;
     public List<GameObject> enemiesToSpawn = new List<GameObject>();
 
+    private int countHelp;
     private int killCount = 0;
 
     public Transform[] spawnLocation;
@@ -45,11 +50,7 @@ public class WaveSpawner : MonoBehaviour
                 enemiesToSpawn.RemoveAt(0); // and remove it
                 spawnedEnemies.Add(enemy);
                 spawnTimer = spawnInterval;
-                if (killCount+1 < spawnedEnemies.Count)
-                {
-                    killCount++;
-                    killCount = killCount + ((int)Time.deltaTime);
-                }
+                countHelp = spawnedEnemies.Count;
                 if (spawnIndex + 1 <= spawnLocation.Length - 1)
                 {
                     spawnIndex++;
@@ -64,8 +65,22 @@ public class WaveSpawner : MonoBehaviour
             {
                 waveTimer = 0; // if no enemies remain, end wave
             }
+            
+            if (countHelp>spawnedEnemies.Count)
+            {
+                
+                killCount++;
+                killCountChanged?.Invoke(killCount);
+                
+                
+            }
+            else
+            {
+                killCountChanged?.Invoke(killCount);
+            }
+             
             waveMonsterAlive?.Invoke(spawnedEnemies.Count);
-            killCountChanged?.Invoke(killCount);
+            
         }
         else
         {
@@ -84,17 +99,18 @@ public class WaveSpawner : MonoBehaviour
 
     }
 
- 
+    public static int difficultyMultiplier = 10;
     public void GenerateWave()
     {
-        waveValue = currWave * 10;
+     
+        waveValue = currWave * difficultyMultiplier;
         GenerateEnemies();
         
 
         spawnInterval = waveDuration / enemiesToSpawn.Count; // gives a fixed time between each enemies
         waveTimer = waveDuration; // wave duration is read only
     }
-
+    
     public void GenerateEnemies()
     {
         // Create a temporary list of enemies to generate
@@ -128,6 +144,8 @@ public class WaveSpawner : MonoBehaviour
     }
 
 }
+
+
 
 [System.Serializable]
 public class Enemy

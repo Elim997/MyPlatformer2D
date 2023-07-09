@@ -7,6 +7,7 @@ public class GameOverUI : MonoBehaviour
 {
     public GameObject gameOverMenu;
 
+    public MusicPlayer musicPlayer;
     
     public Canvas gameCanvas;
 
@@ -24,14 +25,21 @@ public class GameOverUI : MonoBehaviour
         PlayerController.damageDeath -= EnableGameOverMenu;
     }
 
+    public void GoToMainMenu()
+    {
+        SceneManager.LoadScene("MainMenuScene");
+    }
+
     public void EnableGameOverMenu()
     {
         gameOverMenu.SetActive(true);
+        Time.timeScale = 0f;
     }
 
     public void RestartLevel()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        Time.timeScale = 1f;
     }
 
     public void QuitLevel()
@@ -46,6 +54,12 @@ public class GameOverUI : MonoBehaviour
         #elif (UNITY_WEBGL)
                 SceneManager.LoadScene("QuitScene");
         #endif
+    }
+
+    public void MuteButton()
+    {
+        musicPlayer.introSource.mute = !musicPlayer.introSource.mute;
+        musicPlayer.loopSource.mute = !musicPlayer.loopSource.mute;
     }
 
 }

@@ -13,7 +13,10 @@ public class MusicPlayer : MonoBehaviour
     {
         introSource.Play();
         loopSource.PlayScheduled(AudioSettings.dspTime + introSource.clip.length);
+        
     }
+
+  
 
     // Update is called once per frame
     void Update()

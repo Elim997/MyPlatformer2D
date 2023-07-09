@@ -152,7 +152,8 @@ public class PlayerController : MonoBehaviour
 
     public void OnMove(InputAction.CallbackContext context)
     {
-        moveInput = context.ReadValue<Vector2>();
+        if(!UIManager.isPaused)
+            moveInput = context.ReadValue<Vector2>();
 
         if (IsAlive)
         {
@@ -208,7 +209,7 @@ public class PlayerController : MonoBehaviour
     public void OnAttack(InputAction.CallbackContext context)
     {
         //TODO check if alive
-        if (context.started)
+        if (context.started && !UIManager.isPaused)
         {
             animator.SetTrigger(AnimationStrings.attackTrigger);
             
